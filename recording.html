@@ -1,0 +1,237 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Reeplayer Recording</title> 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/7.4.0/adapter.min.js" ></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+<script type="text/javascript" src="js/janus.js" ></script>
+<script type="text/javascript" src="videoview.js"></script>
+<script type="text/javascript" src="js/cameraclient.js" ></script> 
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous">
+</script>
+<script>
+  // http://host:port/index.html
+  var hostname = window.location.hostname;
+  if (!hostname) hostname = "127.0.0.1";  
+  console.log("Host name: " + hostname); 
+
+  var jsonrpc_url = 'http://' + hostname + ":8090";  
+  console.log("JSON RPC url: " + jsonrpc_url); 
+  var camera_client = new CameraClient(jsonrpc_url); 
+
+  function onRecording() {
+    console.log("start/stop recording...");
+    var recording_button = document.getElementById('recordingcheck');
+    recording_button.indeterminate = true;
+    var start = recording_button.checked; 
+    var command = start ? "record:start" : "record:stop";  
+    camera_client.recordCommand(command, 
+      function(id, result) {
+        console.log("return: " + result); 
+        recording_button.indeterminate = false; 
+        if (!result) {
+          recording_button.checked = !start;
+        }
+      }, 
+      function(code, message) {
+        console.log("error: " + message); 
+        recording_button.checked = (!start);
+      }
+    )
+  }
+
+  window.onload = function () {
+    
+  };
+</script>
+<style type="text/css">
+* {
+  box-sizing: border-box;
+}
+
+.checkbtn {
+  display: inline-block;
+  position: relative;
+  margin: 0; 
+}
+
+.checkbtn input {
+  display: none;
+}
+
+.checkbtn span {
+  display: inline-block;
+  position: relative;
+  height: 35px; 
+  margin: 0 2px; 
+  padding: 0 15px 0 35px;
+  line-height: 35px;
+  font-size: 100%; 
+  color:#444;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  background-color:#f1f1f1;
+  border: none;
+  cursor: pointer;
+  background-image: url("images/gray-light.png");
+  background-repeat: no-repeat;
+  background-position: left 5px center;
+  background-size: 25px;
+}
+
+.checkbtn span:hover {
+  background-color: #ddd;
+}
+
+.checkbtn input:checked + span {
+  background-image: url("images/green-light.png");
+} 
+
+.checkbtn input:indeterminate + span {
+  background-image: url("images/yellow-light.png");
+} 
+
+.switchbtn {
+  border: none;
+  outline: none;
+  height: 35px; 
+  padding: 8px 12px;
+  margin: 0; 
+  font-size: 100%;
+  color: #444;
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.switchbtn:hover {
+  background-color: #ddd;
+}
+
+.switchbtn.active {
+  background-color: #666;
+  color: white;
+}
+
+input[type=button] {
+  display: inline-block;
+  height: 35px; 
+  margin: 0 2px;
+  padding: 0 15px; 
+  border: none;
+  font-size: 100%; 
+  color: #444;
+  background-color: #f1f1f1;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+input[type=button]:hover {
+  background-color: #ddd;
+}
+
+body {
+  margin: 0;
+  padding: 0; 
+  text-align: center;
+}
+
+#header {
+  height: 65px; 
+  position: absolute;
+  top: 0; 
+  left: 0;
+  right: 0;  
+  overflow: hidden;
+  border-bottom: 1px solid #666;
+}
+
+#header img {
+  position: absolute; 
+  height: 55px;
+  left: 10px; 
+  bottom: 5px;
+}
+
+#header ul {
+  position: absolute; 
+  margin: 0;
+  right: 30px; 
+  bottom: 5px;
+}
+
+#header ul li {
+  display: inline;
+  margin-left: 30px;
+}
+
+#main {
+  position: absolute;
+  top: 70px; 
+  bottom: 70px;
+  left: 0; 
+  right: 0; 
+  overflow: hidden;
+}
+
+.videoview {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%; 
+}
+
+#footer {
+  height: 65px; 
+  position: absolute;  
+  bottom: 0;  
+  left: 0; 
+  right: 0;
+  overflow: hidden; 
+  text-align: center;
+  border-top: 1px solid #666;
+}
+
+#control-0 {
+  height: 45px; 
+  position: absolute;  
+  top: 10px;  
+  left: 10px; 
+  right: 10px; 
+  overflow: hidden; 
+}
+</style>
+</head>
+
+<body> 
+  <div id="header">
+    <img src="images/logo.png"/>
+    <ul>
+      <li><a href="index.html">System</a></li>
+      <li><a href="calibration.html">Calibration</a></li>
+      <li><a href="">Recording</a></li>
+      <li><a href="speed_test.html">Speed test</a></li>
+    </ul>
+  </div>
+  <div id="main">
+    <iframe class="videoview" src="videoview.html" scrolling="no" frameborder="0" allowfullscreen></iframe>
+  </div>
+  <div id = "footer">
+    <div id="control-0">
+      <label class="checkbtn" id="recordingbtn">
+        <input type="checkbox" id="recordingcheck" onclick="onRecording()">
+        <span>Recording</span>
+      </label>
+    </div>
+  </div>
+</body>
+</html>

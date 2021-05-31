@@ -56,7 +56,7 @@ var bitrateTimer = null;
 var spinner = null;
 
 // the default rtsp test stream id 
-var selectedStream = 99;
+var selectedStream = 1;
 
 $(document).ready(function() {
 	// Initialize the library (all console debuggers enabled)
@@ -162,7 +162,7 @@ $(document).ready(function() {
 											Janus.debug("Got SDP!", jsep);
 											var body = { request: "start" };
 											streaming.send({ message: body, jsep: jsep });
-											$('#watch').html("Stop").removeAttr('disabled').click(stopStream);
+											$('#watch').html("Hide").removeAttr('disabled').click(stopStream);
 										},
 										error: function(error) {
 											Janus.error("WebRTC error:", error);

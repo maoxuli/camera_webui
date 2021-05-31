@@ -28,6 +28,19 @@
   console.log("JSON RPC url: " + jsonrpc_url); 
   var camera_client = new CameraClient(jsonrpc_url); 
 
+  function startStreaming() {
+    console.log("start streaming..."); 
+    var command = "stream:start";
+    camera_client.streamCommand(command, 
+      function(id, result) {
+        console.log("return: " + result); 
+      }, 
+      function(code, message) {
+        console.log("error: " + message); 
+      }
+    )
+  }
+
   function onRecording() {
     console.log("start/stop recording...");
     var recording_button = document.getElementById('recordingcheck');
@@ -37,20 +50,40 @@
     camera_client.recordCommand(command, 
       function(id, result) {
         console.log("return: " + result); 
-        recording_button.indeterminate = false; 
         if (!result) {
-          recording_button.checked = !start;
+          recording_button.indeterminate = false;
+          recording_button.checked = false; 
         }
       }, 
       function(code, message) {
         console.log("error: " + message); 
-        recording_button.checked = (!start);
+      }
+    )
+  }
+
+  function onTimer() {
+    console.log("check live state..."); 
+    camera_client.checkLiveStates( 
+      function(id, result) {
+        console.log("return: " + result); 
+        var states = result; 
+        if (states.recording < 0) {
+          document.getElementById('recordingcheck').indeterminate = true; 
+        }
+        else {
+          document.getElementById('recordingcheck').indeterminate = false; 
+          document.getElementById('recordingcheck').checked = states.recording; 
+        }
+      }, 
+      function(code, message) {
+        console.log("error: " + message); 
       }
     )
   }
 
   window.onload = function () {
-    
+    startStreaming(); 
+    setInterval(onTimer, 3000); 
   };
 </script>
 <style type="text/css">

@@ -20,6 +20,33 @@
   console.log("JSON RPC url: " + jsonrpc_url); 
   var camera_client = new CameraClient(jsonrpc_url); 
 
+  var stitch_mode = 0;
+  var calib_mode = 1; 
+
+  function calibControl() {
+    console.log("calib mode..."); 
+    camera_client.setLiveMode(calib_mode, 
+      function(id, result) {
+        console.log("return: " + result); 
+      }, 
+      function(code, message) {
+        console.log("error: " + message); 
+      }
+    );
+  }
+
+  function stitchControl() {
+    console.log("calib mode..."); 
+    camera_client.setLiveMode(stitch_mode, 
+      function(id, result) {
+        console.log("return: " + result); 
+      }, 
+      function(code, message) {
+        console.log("error: " + message); 
+      }
+    );
+  }
+
   function rebootControl() {
     console.log("reboot..."); 
     var pwd = "";
@@ -100,17 +127,19 @@ body {
   text-align: center;
 }
 
-#systemctrl {
-  width: 400px; 
+.panel {
+  position: relative; 
+  width: 80%; 
   display: inline-block;
+  border-bottom: 1px solid gray; 
 }
 
-#systemctrl input[type=button] {
+.panel input[type=button] {
   position: relative;
   display: inline-block;
-  width: 120px; 
   height: 35px; 
-  margin: 10px 10px; 
+  margin: 10px 10px;
+  padding: 0 15px;
   border: none;
   font-size: 110%; 
   color:#444;
@@ -118,7 +147,7 @@ body {
   overflow: hidden;
 }
 
-#systemctrl input[type=button]:hover {
+.panel input[type=button]:hover {
   background-color: #ededed;
   border: 1px solid #ddd; 
 }
@@ -147,7 +176,11 @@ body {
     </ul>
   </div>
   <div id="main">
-    <div id="systemctrl">
+    <div class="panel">
+      <input type="button" id="calibbtn" value="Calibration Mode" onclick="calibControl()">
+      <input type="button" id="stitchbtn" value="Stitching Mode" onclick="stitchControl()">
+    </div>
+    <div class="panel">
       <input type="button" id="rebootbtn" value="Reboot" onclick="rebootControl()">
       <input type="button" id="shutdownbtn" value="Shutdown" onclick="shutdownControl()">
     </div>

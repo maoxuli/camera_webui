@@ -30,8 +30,8 @@
 
   function startStreaming() {
     console.log("start streaming..."); 
-    var command = "stream:start";
-    camera_client.streamCommand(command, 
+    var command = "starts";
+    camera_client.live_control(command, 
       function(id, result) {
         console.log("return: " + result); 
       }, 
@@ -46,8 +46,8 @@
     var start_button = document.getElementById('startcheck');
     start_button.indeterminate = true;
     var start = start_button.checked; 
-    var command = start ? "calib:start" : "calib:pause";  
-    camera_client.calibCommand(command, 
+    var command = start ? "start" : "pause";  
+    camera_client.calib_control(command, 
       function(id, result) {
         console.log("return: " + result); 
         start_button.indeterminate = false; 
@@ -63,9 +63,33 @@
     )
   }
 
-  function calibCommand(command) {
-    console.log("calibCommand: " + command); 
-    camera_client.calibCommand(command, 
+  function calibControl(command) {
+    console.log("calibControl: " + command); 
+    camera_client.calib_control(command, 
+      function(id, result) {
+        console.log("return: " + result); 
+      }, 
+      function(code, message) {
+        console.log("error: " + message); 
+      }
+    )
+  }
+
+  function calibMode(mode) {
+    console.log("calibMode: " + mode); 
+    camera_client.calib_mode(mode, 
+      function(id, result) {
+        console.log("return: " + result); 
+      }, 
+      function(code, message) {
+        console.log("error: " + message); 
+      }
+    )
+  }
+
+  function calibOption(option) {
+    console.log("calibOption: " + option); 
+    camera_client.calib_option(option, 
       function(id, result) {
         console.log("return: " + result); 
       }, 
@@ -77,69 +101,86 @@
 
   function acceptCalib() {
     console.log("accecptCalib...");
-    var command = "calib:option=1";  
-    calibCommand(command); 
+    calibOption(1); 
   }
 
   function declineCalib() {
     console.log("declineCalib...");
-    var command = "calib:option=0";  
-    calibCommand(command); 
+    calibOption(0); 
   }
 
   function doCalib() {
     console.log("doCalib...");
-    var command = "calib:calib";  
-    calibCommand(command); 
+    calibControl("calib"); 
   }
 
   function resetCalib() {
     console.log("resetCalib...");
-    var command = "calib:reset";  
-    calibCommand(command); 
+    calibControl("reset"); 
   }
 
   function saveCalib() {
     console.log("saveCalib...");
-    var command = "calib:save";  
-    calibCommand(command); 
+    calibControl("save"); 
+  }
+
+  function applyCalib() {
+    console.log("applyCalib...");
+    calibControl("apply"); 
   }
 
   function calibration() {   
     console.log("calibration...");
-    document.getElementById("calibrationbtn").classList.add("active"); 
-    document.getElementById("previewbtn").classList.remove("active");
-    document.getElementById("evaluationbtn").classList.remove("active");
-    document.getElementById("control-1").style["display"] = "block"; 
-    document.getElementById("control-2").style["display"] = "none"; 
-    var command = "calib:mode=0"; 
-    calibCommand(command); 
+    calibMode(0); 
   }
 
   function preview() {
     console.log("preview...");
-    document.getElementById("calibrationbtn").classList.remove("active"); 
-    document.getElementById("previewbtn").classList.add("active");
-    document.getElementById("evaluationbtn").classList.remove("active");
-    document.getElementById("control-1").style["display"] = "none"; 
-    document.getElementById("control-2").style["display"] = "none"; 
-    var command = "calib:mode=1"; 
-    calibCommand(command); 
+    calibMode(1); 
   }
 
   function evaluation() {
     console.log("evaluation...");
-    document.getElementById("calibrationbtn").classList.remove("active"); 
-    document.getElementById("previewbtn").classList.remove("active");
-    document.getElementById("evaluationbtn").classList.add("active");
-    document.getElementById("control-1").style["display"] = "none"; 
-    document.getElementById("control-2").style["display"] = "block"; 
-    var command = "calib:mode=2"; 
-    calibCommand(command); 
+    calibMode(2); 
+  }
+
+  function onTimer() {
+    console.log("check calib state..."); 
+    camera_client.calib_state( 
+      function(id, result) {
+        console.log("return: " + result); 
+        var state = result; 
+        if (state.mode == 1) {
+          document.getElementById("calibrationbtn").classList.remove("active"); 
+          document.getElementById("previewbtn").classList.add("active");
+          document.getElementById("evaluationbtn").classList.remove("active");
+          document.getElementById("control-1").style["display"] = "none"; 
+          document.getElementById("control-2").style["display"] = "none"; 
+        }
+        else if (state.mode == 2) {
+          document.getElementById("calibrationbtn").classList.remove("active"); 
+          document.getElementById("previewbtn").classList.remove("active");
+          document.getElementById("evaluationbtn").classList.add("active");
+          document.getElementById("control-1").style["display"] = "none"; 
+          document.getElementById("control-2").style["display"] = "block"; 
+        }
+        else {
+          document.getElementById("calibrationbtn").classList.add("active"); 
+          document.getElementById("previewbtn").classList.remove("active");
+          document.getElementById("evaluationbtn").classList.remove("active");
+          document.getElementById("control-1").style["display"] = "block"; 
+          document.getElementById("control-2").style["display"] = "none"; 
+        }
+      }, 
+      function(code, message) {
+        console.log("error: " + message); 
+      }
+    )
   }
 
   window.onload = function () {
     startStreaming(); 
+    setInterval(onTimer, 3000); 
   };
 </script>
 <style type="text/css">
@@ -231,6 +272,7 @@ body {
   margin: 0;
   padding: 0; 
   text-align: center;
+  font-family:"Roboto",sans-serif;
 }
 
 #header {
@@ -259,7 +301,7 @@ body {
 
 #header ul li {
   display: inline;
-  margin-left: 30px;
+  margin-left: 10px;
 }
 
 #main {
@@ -327,9 +369,12 @@ body {
     <img src="images/logo.png"/>
     <ul>
       <li><a href="index.html">System</a></li>
-      <li><a href="">Calibration</a></li>
-      <li><a href="recording.html">Recording</a></li>
-      <li><a href="speed_test.html">Speed test</a></li>
+        <li><a href="">Calibration</a></li>
+        <li><a href="recording.html">Recording</a></li>
+        <li><a href="uploading.html">Uploading</a></li>
+        <li><a href="playback.html">Playback</a></li>
+        <li><a href="stitching.html">Stitching</a></li>
+      </ul>
     </ul>
   </div>
   <div id="main">

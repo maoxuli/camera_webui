@@ -46,47 +46,79 @@ function CameraClient(url) {
     }
 }
 
-CameraClient.prototype.restartSystem = function(password, callbackSuccess, callbackError) {
+CameraClient.prototype.system_reboot = function(password, callbackSuccess, callbackError) {
     var params = {password : password};
-    return this.doRPC("restartSystem", params, true, callbackSuccess, callbackError);
+    return this.doRPC("system_reboot", params, true, callbackSuccess, callbackError);
 };
-CameraClient.prototype.shutdownSystem = function(password, callbackSuccess, callbackError) {
+CameraClient.prototype.system_shutdown = function(password, callbackSuccess, callbackError) {
     var params = {password : password};
-    return this.doRPC("shutdownSystem", params, true, callbackSuccess, callbackError);
+    return this.doRPC("system_shutdown", params, true, callbackSuccess, callbackError);
 };
-CameraClient.prototype.checkSystemStates = function(callbackSuccess, callbackError) {
-    var params = null;
-    return this.doRPC("checkSystemStates", params, true, callbackSuccess, callbackError);
-};
-CameraClient.prototype.setLiveMode = function(mode, callbackSuccess, callbackError) {
+CameraClient.prototype.system_mode = function(mode, callbackSuccess, callbackError) {
     var params = {mode : mode};
-    return this.doRPC("setLiveMode", params, true, callbackSuccess, callbackError);
+    return this.doRPC("system_mode", params, true, callbackSuccess, callbackError);
 };
-CameraClient.prototype.calibCommand = function(command, callbackSuccess, callbackError) {
-    var params = {command : command};
-    return this.doRPC("calibCommand", params, true, callbackSuccess, callbackError);
-};
-CameraClient.prototype.checkCalibStates = function(callbackSuccess, callbackError) {
+CameraClient.prototype.system_state = function(callbackSuccess, callbackError) {
     var params = null;
-    return this.doRPC("checkCalibStates", params, true, callbackSuccess, callbackError);
+    return this.doRPC("system_state", params, true, callbackSuccess, callbackError);
 };
-CameraClient.prototype.streamCommand = function(command, callbackSuccess, callbackError) {
+CameraClient.prototype.file_tree = function(filepath, callbackSuccess, callbackError) {
+    var params = {filepath : filepath};
+    return this.doRPC("file_tree", params, true, callbackSuccess, callbackError);
+};
+CameraClient.prototype.calib_control = function(command, callbackSuccess, callbackError) {
     var params = {command : command};
-    return this.doRPC("streamCommand", params, true, callbackSuccess, callbackError);
+    return this.doRPC("calib_control", params, true, callbackSuccess, callbackError);
 };
-CameraClient.prototype.recordCommand = function(command, callbackSuccess, callbackError) {
-    var params = {command : command};
-    return this.doRPC("recordCommand", params, true, callbackSuccess, callbackError);
+CameraClient.prototype.calib_mode = function(mode, callbackSuccess, callbackError) {
+    var params = {mode : mode};
+    return this.doRPC("calib_mode", params, true, callbackSuccess, callbackError);
 };
-CameraClient.prototype.checkLiveStates = function(callbackSuccess, callbackError) {
+CameraClient.prototype.calib_option = function(option, callbackSuccess, callbackError) {
+    var params = {option : option};
+    return this.doRPC("calib_option", params, true, callbackSuccess, callbackError);
+};
+CameraClient.prototype.calib_state = function(callbackSuccess, callbackError) {
     var params = null;
-    return this.doRPC("checkLiveStates", params, true, callbackSuccess, callbackError);
+    return this.doRPC("calib_state", params, true, callbackSuccess, callbackError);
 };
-CameraClient.prototype.setFieldCorners = function(corners, callbackSuccess, callbackError) {
+CameraClient.prototype.live_control = function(command, callbackSuccess, callbackError) {
+    var params = {command : command};
+    return this.doRPC("live_control", params, true, callbackSuccess, callbackError);
+};
+CameraClient.prototype.live_state = function(callbackSuccess, callbackError) {
+    var params = null;
+    return this.doRPC("live_state", params, true, callbackSuccess, callbackError);
+};
+CameraClient.prototype.live_set_field = function(corners, callbackSuccess, callbackError) {
     var params = {corners : corners};
-    return this.doRPC("setFieldCorners", params, true, callbackSuccess, callbackError);
+    return this.doRPC("live_set_field", params, true, callbackSuccess, callbackError);
 };
-CameraClient.prototype.checkFieldCorners = function(callbackSuccess, callbackError) {
+CameraClient.prototype.live_get_field = function(callbackSuccess, callbackError) {
     var params = null;
-    return this.doRPC("checkFieldCorners", params, true, callbackSuccess, callbackError);
+    return this.doRPC("live_get_field", params, true, callbackSuccess, callbackError);
+};
+CameraClient.prototype.upload_control = function(a_command, b_filepath, callbackSuccess, callbackError) {
+    var params = {a_command : a_command, b_filepath : b_filepath};
+    return this.doRPC("upload_control", params, true, callbackSuccess, callbackError);
+};
+CameraClient.prototype.upload_state = function(callbackSuccess, callbackError) {
+    var params = null;
+    return this.doRPC("upload_state", params, true, callbackSuccess, callbackError);
+};
+CameraClient.prototype.replay_control = function(a_command, b_filepath, callbackSuccess, callbackError) {
+    var params = {a_command : a_command, b_filepath : b_filepath};
+    return this.doRPC("replay_control", params, true, callbackSuccess, callbackError);
+};
+CameraClient.prototype.replay_state = function(callbackSuccess, callbackError) {
+    var params = null;
+    return this.doRPC("replay_state", params, true, callbackSuccess, callbackError);
+};
+CameraClient.prototype.stitch_control = function(a_command, b_filepath, callbackSuccess, callbackError) {
+    var params = {a_command : a_command, b_filepath : b_filepath};
+    return this.doRPC("stitch_control", params, true, callbackSuccess, callbackError);
+};
+CameraClient.prototype.stitch_state = function(callbackSuccess, callbackError) {
+    var params = null;
+    return this.doRPC("stitch_state", params, true, callbackSuccess, callbackError);
 };

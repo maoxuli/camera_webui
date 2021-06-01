@@ -30,8 +30,8 @@
 
   function startStreaming() {
     console.log("start streaming..."); 
-    var command = "stream:start";
-    camera_client.streamCommand(command, 
+    var command = "starts";
+    camera_client.live_control(command, 
       function(id, result) {
         console.log("return: " + result); 
       }, 
@@ -46,8 +46,8 @@
     var recording_button = document.getElementById('recordingcheck');
     recording_button.indeterminate = true;
     var start = recording_button.checked; 
-    var command = start ? "record:start" : "record:stop";  
-    camera_client.recordCommand(command, 
+    var command = start ? "startr" : "stopr";  
+    camera_client.live_control(command, 
       function(id, result) {
         console.log("return: " + result); 
         if (!result) {
@@ -63,16 +63,16 @@
 
   function onTimer() {
     console.log("check live state..."); 
-    camera_client.checkLiveStates( 
+    camera_client.live_state( 
       function(id, result) {
         console.log("return: " + result); 
-        var states = result; 
-        if (states.recording < 0) {
+        var state = result; 
+        if (state.recording < 0) {
           document.getElementById('recordingcheck').indeterminate = true; 
         }
         else {
           document.getElementById('recordingcheck').indeterminate = false; 
-          document.getElementById('recordingcheck').checked = states.recording; 
+          document.getElementById('recordingcheck').checked = state.recording; 
         }
       }, 
       function(code, message) {
@@ -175,6 +175,7 @@ body {
   margin: 0;
   padding: 0; 
   text-align: center;
+  font-family:"Roboto",sans-serif;
 }
 
 #header {
@@ -203,7 +204,7 @@ body {
 
 #header ul li {
   display: inline;
-  margin-left: 30px;
+  margin-left: 10px;
 }
 
 #main {
@@ -250,9 +251,12 @@ body {
     <img src="images/logo.png"/>
     <ul>
       <li><a href="index.html">System</a></li>
-      <li><a href="calibration.html">Calibration</a></li>
-      <li><a href="">Recording</a></li>
-      <li><a href="speed_test.html">Speed test</a></li>
+        <li><a href="calibration.html">Calibration</a></li>
+        <li><a href="">Recording</a></li>
+        <li><a href="uploading.html">Uploading</a></li>
+        <li><a href="playback.html">Playback</a></li>
+        <li><a href="stitching.html">Stitching</a></li>
+      </ul>
     </ul>
   </div>
   <div id="main">

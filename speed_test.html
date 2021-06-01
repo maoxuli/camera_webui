@@ -38,19 +38,22 @@
 	</div> -->
 </div>
 <style type="text/css">
-html,body{
-	border:none; 
-	padding:0; 
-	margin:10px;
-	background:#FFFFFF;
-	color:#202020;
+* {
+  box-sizing: border-box;
 }
 body{
+	margin:0;
+	padding:10px; 
+	width: 100%;
+	height: 100%;
 	text-align:center;
 	font-family:"Roboto",sans-serif;
 }
 h1{
 	color:#404040;
+	background-color: #E8F6F3;
+	width: 100%;
+	padding: 10px 0;
 }
 #startStopBtn{
 	display:inline-block;
@@ -61,7 +64,8 @@ h1{
 	border-radius:0.3em;
 	transition:all 0.3s;
 	box-sizing:border-box;
-	width:8em; height:3em;
+	width:8em; 
+	height:3em;
 	line-height:2.7em;
 	cursor:pointer;
 	box-shadow: 0 0 0 rgba(0,0,0,0.1), inset 0 0 0 rgba(0,0,0,0.1);

@@ -78,20 +78,28 @@
     console.log("check system state..."); 
     camera_client.system_state( 
       function(id, result) {
-        console.log("return: " + result); 
+        // console.log("return: " + result); 
         var state = result; 
+        console.log("mode: " + state.mode);
         if (state.mode == 0) {
-          document.getElementById("calibbtn").classList.add("active"); 
-          document.getElementById("stitchbtn").classList.remove("active");
+          // sitching
+          document.getElementById("calibbtn").classList.remove("active"); 
+          document.getElementById("stitchbtn").classList.add("active");
         }
         else if (state.mode == 1) {
-          document.getElementById("calibbtn").classList.remove("active"); 
-          document.getElementById("stitchbtn").classList.add("active"); 
+          // calib
+          document.getElementById("calibbtn").classList.add("active"); 
+          document.getElementById("stitchbtn").classList.remove("active"); 
         }
         else {
+          // unknown
           document.getElementById("calibbtn").classList.remove("active"); 
           document.getElementById("stitchbtn").classList.remove("active"); 
         }
+
+        document.getElementById("battbtn").value = parseInt(state.battery); 
+        document.getElementById("tempbtn").value = parseInt(state.temperature);
+        document.getElementById("diskspace").value = parseInt(state.freespace);
       }, 
       function(code, message) {
         console.log("error: " + message); 
@@ -109,24 +117,52 @@
 }
 
 .switchbtn {
-  border: none;
-  outline: none;
-  height: 35px; 
-  padding: 8px 12px;
-  margin: 0; 
-  font-size: 100%;
-  color: #444;
-  background-color: #f1f1f1;
+  display:inline-block;
+	margin:10px 10px;
+	color:#6060AA;
+	background-color:rgba(0,0,0,0);
+	border:0.15em solid #6060FF;
+  border-radius:0.3em;
+	transition:all 0.3s;
+	width:8em; 
+	height:3em;
+	line-height:2.7em;
+  font-size: 1.1em;
   cursor: pointer;
+  border:0.15em solid #6060FF;
+	box-shadow: 0 0 0 rgba(0,0,0,0.1), inset 0 0 0 rgba(0,0,0,0.1);
+  overflow: hidden;
 }
 
 .switchbtn:hover {
-  background-color: #ddd;
+  box-shadow: 0 0 2em rgba(0,0,0,0.1), inset 0 0 1em rgba(0,0,0,0.1);
 }
 
 .switchbtn.active {
-  background-color: #666;
-  color: white;
+	background-color:#FF3030;
+	border-color:#FF6060;
+	color:#FFFFFF;
+}
+
+.clickbtn {
+	display:inline-block;
+	margin:10px 10px;
+	color:#6060AA;
+	background-color:rgba(0,0,0,0);
+	border:0.15em solid #6060FF;
+	border-radius:0.3em;
+	transition:all 0.3s;
+	width:8em; 
+	height:3em;
+	line-height:2.7em;
+  font-size: 1.1em;
+	cursor:pointer;
+	box-shadow: 0 0 0 rgba(0,0,0,0.1), inset 0 0 0 rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.clickbtn:hover {
+	box-shadow: 0 0 2em rgba(0,0,0,0.1), inset 0 0 1em rgba(0,0,0,0.1);
 }
 
 body {
@@ -190,26 +226,6 @@ h1{
   padding: 10px 0;
 }
 
-.panel input[type=button] {
-	display:inline-block;
-	margin:10px 10px;
-	color:#6060AA;
-	background-color:rgba(0,0,0,0);
-	border:0.15em solid #6060FF;
-	border-radius:0.3em;
-	transition:all 0.3s;
-	height:50px;
-  width: 130px;
-  font-size: 105%;
-	cursor:pointer;
-	box-shadow: 0 0 0 rgba(0,0,0,0.1), inset 0 0 0 rgba(0,0,0,0.1);
-  overflow: hidden;
-}
-
-.panel input[type=button]:hover {
-	box-shadow: 0 0 2em rgba(0,0,0,0.1), inset 0 0 1em rgba(0,0,0,0.1);
-}
-
 #filetree {
   text-align: left;
 }
@@ -238,7 +254,7 @@ h1{
 
 .frameview {
   width: 100%;
-  height: 300px; 
+  height: 350px; 
 }
 
 #footer {
@@ -270,10 +286,10 @@ h1{
     <div class="panel">
       <h1>System State</h1>
       <div class="group">
-        <label>Temperature: </label><input type="number" id="temperature" value="0" min="0" max="999" readonly><label>F</label>
+        <label>Temperature: </label><input type="number" id="tempbtn" value="0" min="0" max="999" readonly><label>F</label>
       </div>
       <div class="group">
-        <label>Battery : </label><input type="number" id="battery" value="0" min="0" max="999" readonly>
+        <label>Battery : </label><input type="number" id="battbtn" value="0" min="0" max="999" readonly><label>%</label>
       </div>
     </div>
     <div class="panel">
@@ -282,7 +298,7 @@ h1{
         <label>Camera_0000000001</label>
       </div>
       <div class="group">
-        <label>Available disk space: </label><input type="number" id="diskspce" value="0" min="0" max="999" readonly><label>GB</label>
+        <label>Available disk space: </label><input type="number" id="diskspace" value="0" min="0" max="999" readonly><label>MB</label>
       </div>      
       <div id="filetree"></div>
     </div>
@@ -293,8 +309,8 @@ h1{
     </div>
     <div class="panel">
       <h1>System Control</h1>
-      <input type="button" id="rebootbtn" value="Reboot" onclick="rebootControl()">
-      <input type="button" id="shutdownbtn" value="Shutdown" onclick="shutdownControl()">
+      <input type="button" class="clickbtn" id="rebootbtn" value="Reboot" onclick="rebootControl()">
+      <input type="button" class="clickbtn" id="shutdownbtn" value="Shutdown" onclick="shutdownControl()">
     </div>
     <div class="panel">
       <iframe class="frameview" src="speed_test.html" scrolling="no" frameborder="0"></iframe>

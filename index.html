@@ -50,7 +50,7 @@
 
   function rebootControl() {
     console.log("reboot..."); 
-    var pwd = "";
+    var pwd = "reeplayer";
     camera_client.system_roboot(pwd, 
       function(id, result) {
         console.log("return: " + result); 
@@ -63,7 +63,7 @@
 
   function shutdownControl() {
     console.log("shutdown..."); 
-    var pwd = "";
+    var pwd = "reeplayer";
     camera_client.system_shutdown(pwd, 
       function(id, result) {
         console.log("return: " + result); 

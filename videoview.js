@@ -56,7 +56,8 @@ var bitrateTimer = null;
 var spinner = null;
 
 // the default rtsp test stream id 
-var selectedStream = 1;
+var selectedStream = 1; // rtp stream 
+var selectedStream = 99; // rtsp stream 
 
 $(document).ready(function() {
 	// Initialize the library (all console debuggers enabled)
